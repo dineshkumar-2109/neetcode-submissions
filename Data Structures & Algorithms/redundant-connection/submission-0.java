@@ -1,0 +1,51 @@
+class Solution {
+    class Union{
+        int parent[];
+        int rank[];
+        private int components;
+        public Union(int n){
+            parent=new int[n];
+            rank=new int[n];
+            components=n;
+            for(int i=0;i<n;i++){
+                parent[i]=i;
+            }
+
+        }
+        public int find(int x){
+            if(parent[x]!=x){
+                parent[x]= find(parent[x]);
+            }
+            return parent[x];
+        }
+        public boolean union(int a,int b){
+            int rootA=find(a);
+            int rootB=find(b);
+            if(rootA==rootB) return false;
+            if(rank[rootA]>rank[rootB]){
+                parent[rootB]=rootA;
+                
+            }else if(rank[rootA]<rank[rootB]){
+                parent[rootA]=rootB;
+                
+            }else{
+                parent[rootB]=rootA;
+                rank[rootA]++;
+            }
+            components--;
+            return true;
+        }
+        public int getComponents(){
+            return components;
+        }
+    }
+    public int[] findRedundantConnection(int[][] edges) {
+        Union u=new Union(edges.length+1);
+        for(int []edge:edges){
+            if(!u.union(edge[0],edge[1])){
+                return new int[]{edge[0],edge[1]};
+            }
+        }
+        return new int[2];
+    }
+}
